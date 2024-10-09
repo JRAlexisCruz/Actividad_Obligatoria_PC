@@ -8,7 +8,7 @@ public class Cliente implements Runnable{
     public Cliente(Barberia bar, int id){
          this.barberia=bar;
          this.id=id;
-    }
+    }//pruebita lucas
 
 
     //Observadores
