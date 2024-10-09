@@ -6,13 +6,17 @@ public class Barberia {
     private Semaphore semBarbero;
     private Semaphore semSillon;
     private Semaphore semSalida;
+    private Semaphore semSillas; //Esta es la posibilidad, para reemplazar lo de las sillas
     //private Cola sillasDeEspera;
     private int cantSillas;
+
     //Constructor
     public Barberia(){
-        this.semBarbero=new Semaphore(0, true);
-        this.semSillon=new Semaphore(1,true);
-        this.semSalida=new Semaphore(0,true);
+        this.semBarbero=new Semaphore(0);
+        this.semSillon=new Semaphore(1);
+        this.semSalida=new Semaphore(0);
+        this.semSillas= new Semaphore(5, true); //Aca las sillas darian permisos para sentarse, reparte hasta
+                                                             //5 permisos, con equidad.
         //this.sillasDeEspera=new Cola();
         this.cantSillas=5;
     }
@@ -38,26 +42,11 @@ public class Barberia {
         return this.cantSillas;
     }
 
-
-    // public Cola getCola(){
-    //     return this.sillasDeEspera;
-    // }
-
-
-    //Propios
-    // public Cliente proximoCliente(){
-    //     Cliente proximo;
-    //     proximo=this.getCola().obtenerFrente();
-    //     return proximo;
-    // }
-
-
-    public boolean verifSillon(){
-        boolean verificado;
-        verificado=this.getSemSillon().tryAcquire();
-        return verificado;
+    public Semaphore getSemSillas(){
+        return this.semSillas;
     }
 
+    //Propios
 
     public void descansar(){
         try{
@@ -82,6 +71,7 @@ public class Barberia {
     public void liberar(){
         System.out.println("Barbero termino de atender");
         this.getSemSalida().release();
+        this.semSillas.release();
     }
 
 
@@ -103,6 +93,32 @@ public class Barberia {
 
     public void liberarSillon(){
         this.getSemSillon().release();
+    }
+
+    //Aca verificaria el sillon, si puede se corta
+    //sino solicita un permiso a la silla y se sienta
+    //sino se va
+    public void  verifSillon(){
+        boolean sillon, silla=false;
+   
+            sillon= this.getSemSillon().tryAcquire(); //Aca no deberiamos hacer el cartel que diga que comenzo a cortarse?
+            if(!sillon){
+                silla= this.getSemSillas().tryAcquire();
+                if(silla){
+                    System.out.println("El cliente se sento en la silla");//igual no se si queda bien
+                                                                            //
+                }
+            }else if(!silla){
+                    System.out.println("Se jue"); //Aca por tiempos del cpu me parece que no le da para sillon setearse
+                                                    //true, porque al principio siempre entra aca y no deberia.
+                }
+            
+    }
+
+    public boolean pedirSillon(){
+        boolean sillon;
+        sillon= this.getSemSillon().tryAcquire();
+        return sillon;
     }
    
 }

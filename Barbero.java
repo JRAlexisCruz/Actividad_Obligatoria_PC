@@ -22,13 +22,15 @@ public class Barbero implements Runnable  {
 
 
    //Propios
-    public void run(){
-        while(this.barberia.getCantSillas()>0){
+   public void run(){
+        while(true){
             this.barberia.descansar();
             this.barberia.atender();
             this.barberia.liberar();  
         }
     }
+
+
    
 }
 

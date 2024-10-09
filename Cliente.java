@@ -33,12 +33,27 @@ public class Cliente implements Runnable{
 
     //Propios
     public void run(){
-        if(this.barberia.verifSillon()){
-            System.out.println("Cliente "+this.id+" cortandose el pelo");
-            this.barberia.solicitarCorte();
-            this.barberia.esperarCorte();
-            this.barberia.liberarSillon();
-            System.out.println("Cliente "+this.id+" termino");
+        boolean esperando = true;
+        boolean sillonDisponible=false;
+        boolean yaEntro = false;
+        while(esperando){
+            sillonDisponible=this.barberia.pedirSillon();
+            if(sillonDisponible){
+                System.out.println("Cliente "+this.id+" cortandose el pelo");
+                this.barberia.solicitarCorte();
+                this.barberia.esperarCorte();
+                this.barberia.liberarSillon();
+                System.out.println("Cliente "+this.id+" termino");
+                esperando=false;
+            }else if(!sillonDisponible && !yaEntro){
+                esperando=this.barberia.getSemSillas().tryAcquire();
+                if(esperando){
+                    System.out.println("Cliente "+this.id+" esperando en una silla");
+                }else{
+                    System.out.println("Cliente "+this.id+" se fue");
+                }
+                yaEntro=true;
+            }
         }
     }
 }
