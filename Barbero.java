@@ -1,7 +1,34 @@
 public class Barbero implements Runnable  {
-    
-public void run(){
+    //Atributos
+    private Barberia barberia;
 
+
+    //Constructor
+    public Barbero(Barberia bar){
+        this.barberia=bar;
+   }
+
+
+   //Observadores
+   public  Barberia getBarberia(){
+    return this.barberia;
+   }
+
+
+   //Modificadores
+   public void setBarberia(Barberia bar){
+    this.barberia=bar;
+   }
+
+
+   //Propios
+    public void run(){
+        while(this.barberia.getCantSillas()>0){
+            this.barberia.descansar();
+            this.barberia.atender();
+            this.barberia.liberar();  
+        }
+    }
+   
 }
-    
-}
+
