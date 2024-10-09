@@ -8,7 +8,7 @@ public class Barberia {
     private Semaphore semSalida;
     private Semaphore semSillas; //Esta es la posibilidad, para reemplazar lo de las sillas
     //private Cola sillasDeEspera;
-    private int cantSillas;
+    private Cola sillasDisponibles;
 
     //Constructor
     public Barberia(){
@@ -16,9 +16,8 @@ public class Barberia {
         this.semSillon=new Semaphore(1);
         this.semSalida=new Semaphore(0);
         this.semSillas= new Semaphore(5, true); //Aca las sillas darian permisos para sentarse, reparte hasta
-                                                             //5 permisos, con equidad.
-        //this.sillasDeEspera=new Cola();
-        this.cantSillas=5;
+        //5 permisos, con equidad.
+        this.sillasDisponibles= new Cola();
     }
 
 
@@ -37,13 +36,12 @@ public class Barberia {
         return this.semSalida;
     }
 
-
-    public int getCantSillas(){
-        return this.cantSillas;
-    }
-
     public Semaphore getSemSillas(){
         return this.semSillas;
+    }
+
+    public Cola getSillasDisponibles(){
+        return this.sillasDisponibles;
     }
 
     //Propios
@@ -77,7 +75,6 @@ public class Barberia {
 
     public void solicitarCorte(){
         this.getSemBarbero().release();
-        this.cantSillas--;
     }
 
 
@@ -91,8 +88,11 @@ public class Barberia {
     }
 
 
-    public void liberarSillon(){
+    public void liberarSillon(Cliente c){
         this.getSemSillon().release();
+        if(c.equals(this.sillasDisponibles.obtenerFrente())){
+            this.sillasDisponibles.sacar();
+        }
     }
 
     //Aca verificaria el sillon, si puede se corta
@@ -119,6 +119,12 @@ public class Barberia {
         boolean sillon;
         sillon= this.getSemSillon().tryAcquire();
         return sillon;
+    }
+
+    public boolean sentarse(Cliente c){
+        boolean silla;
+        silla = this.sillasDisponibles.poner(c);
+        return silla;
     }
    
 }

@@ -1,13 +1,13 @@
 public class Cola {
 
-    private Object[] arreglo;
+    private Cliente[] arreglo;
     private int frente;
     private int fin;
-    private static final int TAMANIO = 5;
+    private static final int TAMANIO = 6;
 
     // Crea y devuelve una cola vacía.
     public Cola() {
-        this.arreglo = new Object[TAMANIO];
+        this.arreglo = new Cliente[TAMANIO];
         this.frente = 0;
         this.fin = 0;
     }
@@ -18,7 +18,7 @@ public class Cola {
      * deja la última celda del arreglo vacía, por eso verifica que la siguiente
      * celda después del final sea distinto del frente para poner un nuevo elemento.
      */
-    public boolean poner(Object nuevoElem) {
+    public boolean poner(Cliente nuevoElem) {
         boolean exito = false;
         boolean estaLlena = ((this.fin + 1) % TAMANIO) == this.frente; // Si está llena = true, si no, false.
 
@@ -48,8 +48,8 @@ public class Cola {
     }
 
     // Devuelve el elemento del frente de la cola. La cola no debe ser vacía.
-    public Object obtenerFrente() {
-        Object elem = null;
+    public Cliente obtenerFrente() {
+        Cliente elem = null;
 
         if (!this.esVacia()) {
             elem = this.arreglo[this.frente];
@@ -103,7 +103,7 @@ public class Cola {
         } else {
             cadena = "["; // Comienzo con un corchete
             while (((i + 1) % TAMANIO) != this.fin) { // Recorro hasta el anteúltimo elemento y coloco una coma al final
-                cadena += this.arreglo[i];
+                cadena += this.arreglo[i].getId();
                 i = (i + 1) % TAMANIO;
                 cadena += ",";
             }

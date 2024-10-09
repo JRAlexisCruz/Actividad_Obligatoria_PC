@@ -24,6 +24,8 @@ public class Barbero implements Runnable  {
    //Propios
    public void run(){
         while(true){
+            System.out.println("Clientes en cola:");
+            System.out.println(this.barberia.getSillasDisponibles().toString());
             this.barberia.descansar();
             this.barberia.atender();
             this.barberia.liberar();  
