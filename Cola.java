@@ -107,7 +107,7 @@ public class Cola {
                 i = (i + 1) % TAMANIO;
                 cadena += ",";
             }
-            cadena += this.arreglo[i] + "]"; // Agrego el último elemento y el corchete de cierre
+            cadena += this.arreglo[i].getId() + "]"; // Agrego el último elemento y el corchete de cierre
         }
 
         return cadena;
